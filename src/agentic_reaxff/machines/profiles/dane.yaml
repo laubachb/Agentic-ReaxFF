@@ -1,0 +1,33 @@
+# LLNL LC "Dane" (Sapphire Rapids, 112 cores/node, Slurm).
+#
+# GOTCHA this profile closes: a bare `sbatch -N 1` on Dane allocates ONE CPU
+# and ~2.3 GB. Every job rendered from this profile carries
+# --ntasks-per-node 112, so a fit's worker pool really gets the node.
+name: dane
+job_system: slurm
+launcher: srun
+# Slurm bank: set REAXFF_ACCOUNT (CHIMES_ACCOUNT is honoured as a fallback).
+account: ${REAXFF_ACCOUNT}
+hosttype: LLNL-LC
+partitions:
+  debug: pdebug
+  batch: pbatch
+default_ntasks_per_node: 112
+require_ntasks_per_node_or_exclusive: true
+poll_interval_s: 60
+modules:
+  - intel-classic/2021.6.0
+  - mvapich2/2.3.7
+# MPICH-ABI MPI the LAMMPS python wheel loads (mvapich2 is MPICH-derived).
+mpi_lib: /usr/tce/packages/mvapich2/mvapich2-2.3.7-intel-classic-2021.6.0-magic/lib/libmpi.so.12
+filesystem:
+  scratch_root: /p/lustre2/${USER}
+  # lustre2 has a FILE-COUNT quota (~1.05M), not a space quota: never write
+  # one file per frame/candidate at scale here.
+  max_small_files_per_dir: 5000
+  bulk_archive_root: /p/lustre3/${USER}
+lammps:
+  # source build (setup --component lammps): compilers + cmake from the modules above
+  cmake_args: ["-D CMAKE_C_COMPILER=icc", "-D CMAKE_CXX_COMPILER=icpc"]
+qe:
+  configure_extra_args: []

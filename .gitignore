@@ -1,0 +1,44 @@
+# Install-time state, recreated by ./install.sh and `reaxff-agent setup`:
+# the virtual environment, source-built LAMMPS / Quantum ESPRESSO, the
+# reference ffield library fetched from LAMMPS, and deps/installed.json.
+.venv/
+deps/
+codes/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+venv/
+build/
+dist/
+
+# Test / run artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+log.lammps
+log.cite
+
+# MkDocs build output
+site/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Per-user Claude Code overrides (the shared .claude/settings.json IS committed)
+.claude/settings.local.json
+
+# Local literature (copyrighted PDFs; never committed). The distilled, cited
+# guidance lives in .claude/skills/reaxff-literature/SKILL.md, which is tracked.
+reaxff_papers/
+
+# Per-user environment written by install.sh
+env.sh
+
+# Core dumps
+*.core
+core.*

@@ -1,0 +1,48 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(reaxff-agent *)",
+      "Bash(.venv/bin/reaxff-agent *)",
+      "Bash(python3 -m agentic_reaxff.cli *)",
+      "Bash(.venv/bin/python -m pytest *)",
+      "Bash(python3 -m pytest *)",
+      "Bash(pytest *)",
+      "Bash(mkdocs build *)",
+      "Bash(squeue *)",
+      "Bash(sacct *)",
+      "Bash(sinfo *)",
+      "Bash(lfs quota *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)"
+    ],
+    "ask": [
+      "Bash(reaxff-agent submit *)",
+      "Bash(python3 -m agentic_reaxff.cli submit *)",
+      "Bash(reaxff-agent *--machine*)",
+      "Bash(python3 -m agentic_reaxff.cli *--machine*)",
+      "Bash(scancel *)",
+      "Bash(sbatch *)"
+    ],
+    "deny": [
+      "Bash(scancel -u*)",
+      "Bash(scancel --user*)",
+      "Bash(rm -rf deps*)",
+      "Edit(deps/**)",
+      "Write(deps/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/approval_gate.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

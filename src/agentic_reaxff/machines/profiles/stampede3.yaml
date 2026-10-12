@@ -1,0 +1,27 @@
+# TACC Stampede3 (SKX nodes, 48 cores). Confirm partitions/core counts
+# against current TACC documentation before a first real run.
+name: stampede3
+job_system: TACC
+launcher: ibrun
+# Set REAXFF_ACCOUNT to your TACC allocation (e.g. TG-XXX000000).
+account: ${REAXFF_ACCOUNT}
+hosttype: UT-TACC
+partitions:
+  debug: skx-dev
+  batch: skx
+default_ntasks_per_node: 48
+require_ntasks_per_node_or_exclusive: true
+poll_interval_s: 60
+modules:
+  - intel/24.0
+  - impi/21.11
+# Intel MPI is MPICH-ABI compatible; the path is found from `mpicc -show` by setup.
+mpi_lib: ""
+filesystem:
+  scratch_root: ${SCRATCH}
+  max_small_files_per_dir: 5000
+  bulk_archive_root: null
+lammps:
+  cmake_args: []
+qe:
+  configure_extra_args: []

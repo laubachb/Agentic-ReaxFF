@@ -1,0 +1,33 @@
+# Generic Slurm cluster (and laptops/CI when no scheduler is used).
+# Configure through the environment instead of editing this file:
+#
+#   export REAXFF_ACCOUNT=<bank>            # sbatch -A (required to submit)
+#   export REAXFF_DEBUG_PARTITION=<name>    # default: debug
+#   export REAXFF_BATCH_PARTITION=<name>    # default: batch
+#   export REAXFF_CORES_PER_NODE=<n>        # default: 16
+#   export REAXFF_SCRATCH=<shared dir>      # job directories must live here
+#   export REAXFF_MPI_LIB=<path to libmpi.so.12>  # optional; else pip `mpich`
+#
+# For a permanent setup, `reaxff-agent setup --init-profile my.yaml` writes a
+# profile detected from Slurm that you can edit.
+name: generic
+job_system: slurm
+launcher: srun
+account: ${REAXFF_ACCOUNT}
+hosttype: none
+partitions:
+  debug: ${REAXFF_DEBUG_PARTITION:-debug}
+  batch: ${REAXFF_BATCH_PARTITION:-batch}
+default_ntasks_per_node: ${REAXFF_CORES_PER_NODE:-16}
+require_ntasks_per_node_or_exclusive: true
+poll_interval_s: 60
+modules: []
+mpi_lib: ${REAXFF_MPI_LIB}
+filesystem:
+  scratch_root: ${REAXFF_SCRATCH}
+  max_small_files_per_dir: 5000
+  bulk_archive_root: null
+lammps:
+  cmake_args: []
+qe:
+  configure_extra_args: []

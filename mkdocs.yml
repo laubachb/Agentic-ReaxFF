@@ -1,0 +1,14 @@
+site_name: Agentic-ReaxFF
+repo_url: https://github.com/laubachb/Agentic-ReaxFF
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Getting started: getting_started.md
+  - Concepts: concepts.md
+  - Stage reference: stages.md
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true

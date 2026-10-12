@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-reaxff"
+version = "0.1.0"
+description = "Tool-calling CLI and Python API for building ReaxFF reactive force fields end to end: training-set design, DFT labeling, literature-grounded parameter optimization and validation."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Benjamin R. Laubach" }]
+
+# The core install is everything a local fit needs, including LAMMPS itself
+# (the PyPI wheel ships REAXFF, QEQ and OPENMP). `reaxff-agent setup` adds
+# what pip cannot: the MPI library the wheel loads, a source-built LAMMPS for
+# large MD, Quantum ESPRESSO, and the reference ffield library.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pyyaml>=6.0",
+    "ase>=3.23",
+    "cma>=3.3",
+    "lammps>=2024.8.29",
+]
+
+[project.optional-dependencies]
+# tblite: GFN1/GFN2-xTB labels for prototyping a training set before DFT.
+xtb = ["tblite>=0.4"]
+# rdkit: SMILES -> 3D molecules in data-generate.
+molecules = ["rdkit>=2023.9"]
+plots = ["matplotlib>=3.6"]
+# JAX-ReaxFF (gradient-based fitting) is installed from GitHub by
+# `reaxff-agent setup --component jax_reaxff`; jax itself comes from here.
+jax = ["jax>=0.4.30"]
+# pip-installable MPICH, for machines with no MPICH-ABI MPI (libmpi.so.12).
+mpich = ["mpich>=4.1"]
+dev = ["pytest>=7.0"]
+docs = ["mkdocs>=1.6", "mkdocs-material>=9.5"]
+all = ["agentic-reaxff[xtb,plots,molecules,dev]"]
+
+[project.scripts]
+reaxff-agent = "agentic_reaxff.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"agentic_reaxff" = ["machines/profiles/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit"]
+markers = [
+    "lammps: needs a working LAMMPS python module with REAXFF (skipped otherwise)",
+    "hpc: requires a real HPC allocation/Slurm submission, not run by default",
+    "slow: takes more than ~30 s",
+]
